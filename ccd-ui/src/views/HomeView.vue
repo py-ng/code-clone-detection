@@ -1,3 +1,7 @@
-<script setup></script>
+<script setup>
+import CodeInputForm from '@/components/CodeInputForm.vue'
+</script>
 
-<template></template>
+<template>
+  <CodeInputForm />
+</template>
