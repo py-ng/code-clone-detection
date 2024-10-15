@@ -6,7 +6,9 @@ import { RouterLink, RouterView } from 'vue-router'
   <div>
     <nav class="navbar is-light" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item" href="#"> Code Clone Detection </a>
+        <RouterLink to="/" class="navbar-item">
+          <h3 class="title is-5 has-text-dark">Code Clone Detection</h3>
+        </RouterLink>
       </div>
     </nav>
     <RouterView />
