@@ -1,0 +1,10 @@
+def calculate_sum(a, b):
+    return a + b
+
+def main():
+    x = 10
+    y = 20
+    result = calculate_sum(x, y)
+    print("Sum:", result)
+
+main()

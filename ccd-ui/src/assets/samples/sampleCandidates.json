@@ -1,0 +1,6 @@
+{
+  "candidate1": "def add_numbers(num1, num2):\n    return num1 + num2\n\nresult = add_numbers(10, 20)\nprint(f'Result: {result}')",
+  "candidate2": "def sum_two_numbers(x, y):\n    return x + y\n\nsum_result = sum_two_numbers(10, 20)\nprint('Sum is:', sum_result)",
+  "candidate3": "def sum(a, b):\n    return a + b\n\noutput = sum(5, 15)\nprint(output)",
+  "candidate4": "def calculate_total(num1, num2):\n    total = num1 + num2\n    return total\n\nresult = calculate_total(10, 20)\nprint('Total:', result)"
+}
