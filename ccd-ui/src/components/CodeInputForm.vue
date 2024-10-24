@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 const code = ref('')
 const k = ref(1)
 const candidatesCount = ref(0)
+const showInfo = ref(false)
 const candidates = ref({})
 const router = useRouter()
 
@@ -14,14 +15,43 @@ const handleFileUpload = event => {
     const reader = new FileReader()
     reader.onload = e => {
       try {
-        candidates.value = JSON.parse(e.target.result)
-        candidatesCount.value = Object.keys(candidates.value).length
+        const jsonData = JSON.parse(e.target.result)
+
+        // Validate JSON structure
+        if (typeof jsonData !== 'object' || Array.isArray(jsonData)) {
+          throw new Error(
+            'The JSON structure should be an object with key-value pairs.',
+          )
+        }
+
+        // Validate that each key's value is a string
+        const isValidFormat = Object.entries(jsonData).every(
+          ([key, value]) =>
+            typeof key === 'string' && typeof value === 'string',
+        )
+
+        if (!isValidFormat) {
+          throw new Error(
+            'Each key must map to a string representing the code.',
+          )
+        }
+
+        // If valid, assign the parsed data and update candidate count
+        candidates.value = jsonData
+        candidatesCount.value = Object.keys(jsonData).length
       } catch (error) {
-        alert('Invalid JSON file.')
+        // Detailed error alert
+        alert(
+          `Invalid JSON format: ${error.message}\n\nExpected format:\n{\n  "key1": "code1",\n  "key2": "code2",\n  ...\n}`,
+        )
       }
     }
     reader.readAsText(file)
   }
+}
+
+const toggleInfo = () => {
+  showInfo.value = !showInfo.value
 }
 
 const isValid = ref(false)
@@ -48,7 +78,7 @@ const submitForm = () => {
 <template>
   <section class="section">
     <div class="container">
-      <h1 class="title">Find Similar Codes</h1>
+      <h1 class="title">Find Top K Semantically Similar Codes</h1>
 
       <!-- Main Code Input -->
       <div class="field">
@@ -56,14 +86,19 @@ const submitForm = () => {
         <textarea
           class="textarea"
           v-model="code"
-          placeholder="Paste your code here..."
+          placeholder="Write or Paste your code here..."
           required
         ></textarea>
       </div>
 
       <!-- Candidates File Upload -->
       <div class="field">
-        <label class="label">Candidate Codes (Upload JSON File)</label>
+        <label class="label">
+          Candidate Codes (Upload JSON File)
+          <span class="icon has-text-info is-clickable" @click="toggleInfo">
+            <ion-icon name="information-circle"></ion-icon>
+          </span>
+        </label>
         <div class="file">
           <label class="file-label">
             <input
@@ -84,6 +119,22 @@ const submitForm = () => {
           Detected {{ candidatesCount }} candidates. Enter K between 1 and
           {{ candidatesCount }}.
         </p>
+
+        <!-- Toggleable explanation section for expected JSON format -->
+        <div v-show="showInfo" class="content">
+          <p><strong>Expected JSON format:</strong></p>
+          <pre>
+{
+  "key1": "code1",
+  "key2": "code2",
+  ...
+}</pre
+          >
+          <p>
+            Each key represents a unique identifier, and the value is the
+            corresponding candidate code.
+          </p>
+        </div>
       </div>
 
       <!-- K Input -->
